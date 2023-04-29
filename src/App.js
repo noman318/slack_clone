@@ -5,8 +5,7 @@ import { Sidebar } from "./components/Sidebar";
 import Header from "./components/Header";
 import styled from "styled-components";
 
-function App()
-{
+function App() {
   return (
     <div className="app">
       <Router>
@@ -14,9 +13,7 @@ function App()
         <>
           <AppBody>
             <Sidebar />
-            <Routes>
-              {/* <Route path="/" element={<Sidebar />} /> */}
-            </Routes>
+            <Routes>{/* <Route path="/" element={<Sidebar />} /> */}</Routes>
           </AppBody>
         </>
       </Router>
@@ -27,6 +24,6 @@ function App()
 export default App;
 
 const AppBody = styled.div`
-  display:flex ;
-  height:100vh ;
+  display: flex;
+  height: 100vh;
 `;
