@@ -15,9 +15,13 @@ import {
 } from "@mui/icons-material";
 import SidebarOption from "./SidebarOption";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { firebaseDb } from "../firebaseconfig";
+import { firebaseAuth, firebaseDb } from "../firebaseconfig";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Spinner from "react-spinkit";
 
 export const Sidebar = () => {
+  const [user] = useAuthState(firebaseAuth);
+
   // eslint-disable-next-line
   const [channels, loading, error] = useCollection(
     firebaseDb.collection("rooms")
@@ -26,10 +30,10 @@ export const Sidebar = () => {
     <SidebarContainer>
       <SidebarHeader>
         <SidebarInfo>
-          <h2>Slack comm</h2>
+          <h2>Slack Community</h2>
           <h3>
             <FiberManualRecord />
-            Noman Shaikh
+            {user?.displayName}
           </h3>
         </SidebarInfo>
         <Create />
@@ -46,9 +50,15 @@ export const Sidebar = () => {
       <SidebarOption Icon={ExpandLess} title={"Channels"} />
       <hr />
       <SidebarOption Icon={Add} addChannelOption title={"Add Channel"} />
-      {channels?.docs?.map((doc) => (
-        <SidebarOption key={doc?.id} id={doc.id} title={doc.data().name} />
-      ))}
+      {loading ? (
+        <SpinnerContainer>
+          <StyledSpinner name="folding-cube" color="white" fadeIn="none" />
+        </SpinnerContainer>
+      ) : (
+        channels?.docs?.map((doc) => (
+          <SidebarOption key={doc?.id} id={doc.id} title={doc.data().name} />
+        ))
+      )}
     </SidebarContainer>
   );
 };
@@ -96,4 +106,15 @@ const SidebarInfo = styled.div`
     margin-right: 2px;
     color: green;
   }
+`;
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  height: 100%;
+`;
+
+const StyledSpinner = styled(Spinner)`
+  width: 2rem;
+  height: 2rem;
 `;

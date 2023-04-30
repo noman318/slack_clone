@@ -1,12 +1,15 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { firebaseDb } from "../firebaseconfig";
+import { firebaseDb, firebaseAuth } from "../firebaseconfig";
 import firebase from "firebase/compat/app";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const ChatInput = ({ channelId, channelName, chatRef }) => {
   // console.log("channelName", channelName);
   //   const input = useRef(null);
+  const [user] = useAuthState(firebaseAuth);
+
   const [input, setInput] = useState("");
   const sendMessage = (e) => {
     e.preventDefault();
@@ -16,9 +19,8 @@ const ChatInput = ({ channelId, channelName, chatRef }) => {
     firebaseDb.collection("rooms").doc(channelId).collection("messages").add({
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      user: "Noman Shaikh",
-      userImage:
-        "https://cdn4.iconfinder.com/data/icons/super-hero/154/super-hero-iron-man-head-skin-512.png",
+      user: user?.displayName,
+      userImage: user?.photoURL,
     });
     setInput("");
     chatRef?.current?.scrollIntoView({
