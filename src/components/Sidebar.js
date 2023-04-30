@@ -18,6 +18,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { firebaseDb } from "../firebaseconfig";
 
 export const Sidebar = () => {
+  // eslint-disable-next-line
   const [channels, loading, error] = useCollection(
     firebaseDb.collection("rooms")
   );

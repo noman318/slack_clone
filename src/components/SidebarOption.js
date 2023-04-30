@@ -1,23 +1,30 @@
 import React from "react";
 import styled from "styled-components";
 import { firebaseDb } from "../firebaseconfig";
-
-const addChannel = () => {
-  const channelName = prompt("Please enter the channel name:");
-  if (channelName) {
-    firebaseDb.collection("rooms").add({
-      name: channelName,
-    });
-  }
-};
-
-const selectChannel = () => {};
+import { useDispatch } from "react-redux";
+import { enterRoom } from "../features/appSlice";
 
 function SidebarOption({ Icon, title, addChannelOption, id }) {
-  // const [channels, loading, error] = useCollection(
-  //   firebaseDb.collection("rooms")
-  // );
-  // console.log("channels", channels);
+  const dispatch = useDispatch();
+  const addChannel = () => {
+    const channelName = prompt("Please enter the channel name:");
+    if (channelName) {
+      firebaseDb.collection("rooms").add({
+        name: channelName,
+      });
+    }
+  };
+
+  const selectChannel = () => {
+    if (id) {
+      dispatch(
+        enterRoom({
+          roomId: id,
+        })
+      );
+    }
+  };
+
   return (
     <SidebarOptionContainer
       onClick={addChannelOption ? addChannel : selectChannel}
